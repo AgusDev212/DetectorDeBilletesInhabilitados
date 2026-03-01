@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import CameraCapture from "./CameraCapture.jsx";
 import rangosImagen from "./img/Billetes_Inhabilitados_OK.jpg";
 
 const RANGOS_INHABILITADOS = {
@@ -76,6 +77,14 @@ function App() {
   const [corte, setCorte] = useState("10");
   const [numeroSerie, setNumeroSerie] = useState("");
   const inputSerieRef = useRef(null);
+
+  const [showCamera, setShowCamera] = useState(false);
+
+  const handleCameraDetected = (serie) => {
+    setNumeroSerie(serie);
+    setShowCamera(false);
+    inputSerieRef.current?.focus();
+  };
 
   const manejarCambioCorte = (nuevoCorte) => {
     setCorte(nuevoCorte);
@@ -193,6 +202,16 @@ function App() {
               />
               <button
                 type="button"
+                onClick={() => setShowCamera(true)}
+                disabled={showCamera}
+                className={`rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 ${
+                  showCamera ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                📷
+              </button>
+              <button
+                type="button"
                 onClick={limpiarFormulario}
                 className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
               >
@@ -274,6 +293,12 @@ function App() {
           </p>
         </div>
       </section>
+      {showCamera && (
+        <CameraCapture
+          onDetected={handleCameraDetected}
+          onClose={() => setShowCamera(false)}
+        />
+      )}
     </main>
   );
 }
