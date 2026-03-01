@@ -107,6 +107,9 @@ function App() {
     );
   }, [estaInhabilitado, rangosDelCorte, valorSerie]);
 
+  const formatearNumero = (numero) =>
+    new Intl.NumberFormat("es-BO").format(numero);
+
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10">
       <section className="mx-auto grid w-full max-w-5xl gap-8 rounded-2xl bg-white p-6 shadow-lg md:grid-cols-2 md:p-8">
@@ -170,26 +173,45 @@ function App() {
             <h2 className="mb-2 text-sm font-semibold text-slate-800">
               Rangos inhabilitados para Bs {corte}
             </h2>
-            <ul className="max-h-44 space-y-1 overflow-y-auto text-sm text-slate-700">
-              {rangosDelCorte.map(([desde, hasta]) => (
-                <li
-                  key={`${desde}-${hasta}`}
-                  className={`rounded px-2 py-1 font-mono ${
-                    rangoCoincidente &&
-                    rangoCoincidente[0] === desde &&
-                    rangoCoincidente[1] === hasta
-                      ? "border border-red-300 bg-red-100 text-red-700"
-                      : ""
-                  }`}
-                >
-                  {desde} - {hasta}
-                  {rangoCoincidente &&
-                    rangoCoincidente[0] === desde &&
-                    rangoCoincidente[1] === hasta &&
-                    "  ← coincide"}
-                </li>
-              ))}
-            </ul>
+            <div className="max-h-52 overflow-y-auto rounded-lg border border-slate-200 bg-white">
+              <table className="w-full border-collapse text-sm text-slate-700">
+                <thead className="sticky top-0 bg-slate-100">
+                  <tr>
+                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold text-slate-700">
+                      Desde
+                    </th>
+                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold text-slate-700">
+                      Hasta
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rangosDelCorte.map(([desde, hasta]) => {
+                    const esRangoCoincidente =
+                      rangoCoincidente &&
+                      rangoCoincidente[0] === desde &&
+                      rangoCoincidente[1] === hasta;
+
+                    return (
+                      <tr
+                        key={`${desde}-${hasta}`}
+                        className={
+                          esRangoCoincidente ? "bg-red-100 text-red-700" : ""
+                        }
+                      >
+                        <td className="border-b border-slate-100 px-3 py-2 font-mono">
+                          {formatearNumero(desde)}
+                        </td>
+                        <td className="border-b border-slate-100 px-3 py-2 font-mono">
+                          {formatearNumero(hasta)}
+                          {esRangoCoincidente && "  ← coincide"}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
