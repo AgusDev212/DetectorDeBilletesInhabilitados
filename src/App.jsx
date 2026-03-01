@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import rangosImagen from "./img/Billetes_Inhabilitados_OK.jpg";
 
 const RANGOS_INHABILITADOS = {
@@ -75,14 +75,17 @@ const ESTILO_CAMPO_POR_CORTE = {
 function App() {
   const [corte, setCorte] = useState("10");
   const [numeroSerie, setNumeroSerie] = useState("");
+  const inputSerieRef = useRef(null);
 
   const manejarCambioCorte = (nuevoCorte) => {
     setCorte(nuevoCorte);
     setNumeroSerie("");
+    inputSerieRef.current?.focus();
   };
 
   const limpiarFormulario = () => {
     setNumeroSerie("");
+    inputSerieRef.current?.focus();
   };
 
   const valorSerie = useMemo(() => {
@@ -178,6 +181,7 @@ function App() {
             </span>
             <div className="flex gap-2">
               <input
+                ref={inputSerieRef}
                 type="text"
                 inputMode="numeric"
                 value={numeroSerie}
