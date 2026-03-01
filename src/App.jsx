@@ -1,32 +1,11 @@
 import { useMemo, useState } from "react";
-import rangosImagen from "./img/rangos.jpg";
+import rangosImagen from "./img/Billetes_Inhabilitados_OK.jpg";
 
 const RANGOS_INHABILITADOS = {
   50: [
-    [69950001, 70400000],
-    [70400001, 70850000],
-    [70850001, 71300000],
-    [76310012, 85139995],
-    [86400001, 86850000],
-    [90900001, 91350000],
-    [91800001, 92250000],
-    [118700001, 119150000],
-    [119150001, 119600000],
-    [120500001, 120950000],
-  ],
-  20: [
-    [100250001, 100700000],
-    [109250001, 109700000],
-    [110600001, 111050000],
-    [111050001, 111500000],
-    [111950001, 112400000],
-    [112400001, 112850000],
-    [112850001, 113300000],
-    [114200001, 114650000],
-    [114650001, 115100000],
-    [115100001, 115550000],
-  ],
-  10: [
+    [77100001, 77550000],
+    [78000001, 78450000],
+    [78900001, 96350000],
     [96350001, 96800000],
     [96800001, 97250000],
     [98150001, 98600000],
@@ -37,6 +16,60 @@ const RANGOS_INHABILITADOS = {
     [108050001, 108500000],
     [109400001, 109850000],
   ],
+  20: [
+    [87280145, 91646549],
+    [96650001, 97100000],
+    [99800001, 100250000],
+    [100250001, 100700000],
+    [109250001, 109700000],
+    [110600001, 111050000],
+    [111050001, 111500000],
+    [111950001, 112400000],
+    [112400001, 112850000],
+    [112850001, 113300000],
+    [114200001, 114650000],
+    [114650001, 115100000],
+    [115100001, 115550000],
+    [118700001, 119150000],
+    [119150001, 119600000],
+    [120500001, 120950000],
+  ],
+  10: [
+    [67250001, 67700000],
+    [69050001, 69500000],
+    [69500001, 69950000],
+    [69950001, 70400000],
+    [70400001, 70850000],
+    [70850001, 71300000],
+    [76310012, 85139995],
+    [86400001, 86850000],
+    [90900001, 91350000],
+    [91800001, 92250000],
+  ],
+};
+
+const ESTILO_TABLA_POR_CORTE = {
+  10: {
+    fondo: "bg-blue-50 border-blue-200",
+    encabezado: "bg-blue-100 text-blue-800",
+    celda: "border-blue-100",
+  },
+  20: {
+    fondo: "bg-orange-50 border-orange-200",
+    encabezado: "bg-orange-100 text-orange-800",
+    celda: "border-orange-100",
+  },
+  50: {
+    fondo: "bg-purple-50 border-purple-200",
+    encabezado: "bg-purple-100 text-purple-800",
+    celda: "border-purple-100",
+  },
+};
+
+const ESTILO_CAMPO_POR_CORTE = {
+  10: "border-blue-300 bg-blue-50 text-blue-900 ring-blue-500/30",
+  20: "border-orange-300 bg-orange-50 text-orange-900 ring-orange-500/30",
+  50: "border-purple-300 bg-purple-50 text-purple-900 ring-purple-500/30",
 };
 
 function App() {
@@ -94,6 +127,10 @@ function App() {
   }, [estaInhabilitado, numeroSerie]);
 
   const rangosDelCorte = RANGOS_INHABILITADOS[corte] ?? [];
+  const estiloTabla =
+    ESTILO_TABLA_POR_CORTE[corte] ?? ESTILO_TABLA_POR_CORTE[10];
+  const estiloCampoValor =
+    ESTILO_CAMPO_POR_CORTE[corte] ?? ESTILO_CAMPO_POR_CORTE[10];
 
   const rangoCoincidente = useMemo(() => {
     if (!estaInhabilitado || valorSerie === null || Number.isNaN(valorSerie)) {
@@ -106,9 +143,6 @@ function App() {
       ) ?? null
     );
   }, [estaInhabilitado, rangosDelCorte, valorSerie]);
-
-  const formatearNumero = (numero) =>
-    new Intl.NumberFormat("es-BO").format(numero);
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10">
@@ -130,7 +164,7 @@ function App() {
             <select
               value={corte}
               onChange={(event) => manejarCambioCorte(event.target.value)}
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none ring-blue-500 focus:ring-2"
+              className={`w-full rounded-lg border px-3 py-2 outline-none focus:ring-2 ${estiloCampoValor}`}
             >
               <option value="10">Bs 10</option>
               <option value="20">Bs 20</option>
@@ -173,14 +207,20 @@ function App() {
             <h2 className="mb-2 text-sm font-semibold text-slate-800">
               Rangos inhabilitados para Bs {corte}
             </h2>
-            <div className="max-h-52 overflow-y-auto rounded-lg border border-slate-200 bg-white">
+            <div
+              className={`max-h-52 overflow-y-auto rounded-lg border ${estiloTabla.fondo}`}
+            >
               <table className="w-full border-collapse text-sm text-slate-700">
-                <thead className="sticky top-0 bg-slate-100">
+                <thead className={`sticky top-0 ${estiloTabla.encabezado}`}>
                   <tr>
-                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold text-slate-700">
+                    <th
+                      className={`border-b px-3 py-2 text-left font-semibold ${estiloTabla.celda}`}
+                    >
                       Desde
                     </th>
-                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold text-slate-700">
+                    <th
+                      className={`border-b px-3 py-2 text-left font-semibold ${estiloTabla.celda}`}
+                    >
                       Hasta
                     </th>
                   </tr>
@@ -199,11 +239,15 @@ function App() {
                           esRangoCoincidente ? "bg-red-100 text-red-700" : ""
                         }
                       >
-                        <td className="border-b border-slate-100 px-3 py-2 font-mono">
-                          {formatearNumero(desde)}
+                        <td
+                          className={`border-b px-3 py-2 font-mono ${estiloTabla.celda}`}
+                        >
+                          {desde}
                         </td>
-                        <td className="border-b border-slate-100 px-3 py-2 font-mono">
-                          {formatearNumero(hasta)}
+                        <td
+                          className={`border-b px-3 py-2 font-mono ${estiloTabla.celda}`}
+                        >
+                          {hasta}
                           {esRangoCoincidente && "  ← coincide"}
                         </td>
                       </tr>
